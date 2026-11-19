@@ -16,3 +16,5 @@ NOTES
 - Google Fonts require an internet connection; fallback fonts work offline.
 - Original local D: paths have been replaced with relative paths.
 - You can upload the folder contents to GitHub Pages to publish the static site.
+
+V1.0.2: The PC Builder now switches among 12 original tower photos for 48 CPU/GPU/RAM combinations, on both desktop and mobile. Images are illustrative and do not verify hardware compatibility.
