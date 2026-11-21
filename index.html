@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090b14">
+    <meta name="description" content="NEXUS Gaming: explore gaming PCs, compare hardware, and design your own setup.">
+    <title>NEXUS | Built for the Next Level</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <a class="skip-link" href="#mainContent">Skip to content</a>
+    <header class="site-header">
+        <a class="logo" href="#home" aria-label="Nexus home"><span class="logo-symbol">N<span class="logo-dot">.</span></span><span>NEXUS<span class="logo-light">GAMING</span></span></a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-controls="mainNav" aria-expanded="false" hidden>☰</button>
+        <nav id="mainNav" aria-label="Main navigation">
+            <a class="nav-link active" href="#home" aria-current="location">Home</a>
+            <a class="nav-link" href="#collection">Collection</a>
+            <a class="nav-link" href="#specs">Specs</a>
+            <a class="nav-link" href="#games">Games</a>
+            <a class="nav-link" href="#builder">PC Builder</a>
+            <a class="nav-link" href="#contact">Contact</a>
+        </nav>
+        <a class="header-cta" href="#builder">BUILD YOUR PC <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="mainContent" tabindex="-1">
+        <section class="hero section-wrap" id="home" tabindex="-1">
+            <div class="hero-copy">
+                <div class="eyebrow"><span class="pulse"></span> THE NEXT GENERATION OF PLAY</div>
+                <h1>POWER<br>WITHOUT<br><em>LIMITS<span>.</span></em></h1>
+                <p>Every frame matters. Discover machines made for the moments that push you beyond ordinary.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="#collection">EXPLORE COLLECTION <span aria-hidden="true">↗</span></a>
+                    <a class="btn btn-outline" href="#builder">BUILD YOUR OWN <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="hero-stats">
+                    <div><strong>18<span>+</span></strong><small>VISUAL ASSETS</small></div>
+                    <div><strong>100<span>%</span></strong><small>YOUR SETUP</small></div>
+                    <div><strong>01</strong><small>NEW EXPERIENCE</small></div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-glow" aria-hidden="true"></div>
+                <img src="assets/pic/5.jpg" alt="RGB gaming desktop computer" fetchpriority="high">
+                <div class="hero-float">
+                    <span class="float-icon" aria-hidden="true">✦</span>
+                    <div><strong>BUILT TO PERFORM</strong><small>THE ULTIMATE GAMING EXPERIENCE</small></div>
+                </div>
+            </div>
+            <a class="scroll-hint" href="#collection">SCROLL TO EXPLORE <span aria-hidden="true">↓</span></a>
+        </section>
+        <section class="ticker" aria-label="Highlights"><div class="ticker-desktop">PERFORMANCE FIRST <span>✳</span> BUILT FOR GAMERS <span>✳</span> CREATE YOUR SETUP <span>✳</span> PERFORMANCE FIRST <span>✳</span> BUILT FOR GAMERS <span>✳</span> CREATE YOUR SETUP <span>✳</span></div><div class="ticker-mobile">GAME ON. <span>LEVEL UP.</span></div></section>
+        <section class="section-wrap section-pad" id="collection" tabindex="-1">
+            <div class="section-top"><div><div class="section-kicker">01 / THE COLLECTION</div><h2>FIND YOUR <span>EDGE.</span></h2><p>Three distinct looks. One obsession: the perfect gaming experience.</p></div><span class="section-side">CHOOSE YOUR MACHINE ↘</span></div>
+            <div class="product-grid">
+                <article class="product-card">
+                    <div class="product-photo">
+                        <img src="assets/pic/1.jpeg" alt="Black gaming PC with RGB fans" loading="lazy">
+                    </div>
+                    <div class="product-bottom">
+                        <span class="product-tag">RGB EDITION</span>
+                        <h3>PHANTOM X</h3>
+                        <p>Bold design. Immersive atmosphere.</p>
+                        <button class="icon-button" data-preset="phantom" aria-label="Configure Phantom X" type="button">CONFIGURE <span aria-hidden="true">↗</span></button>
+                    </div>
+                </article>
+                <article class="product-card">
+                    <div class="product-photo">
+                        <img src="assets/pic/9.jfif" alt="White gaming desktop tower" loading="lazy">
+                    </div>
+                    <div class="product-bottom">
+                        <span class="product-tag">WHITE EDITION</span>
+                        <h3>ARCTIC ONE</h3>
+                        <p>Clean aesthetics. Serious ambition.</p>
+                        <button class="icon-button" data-preset="arctic" aria-label="Configure Arctic One" type="button">CONFIGURE <span aria-hidden="true">↗</span></button>
+                    </div>
+                </article>
+                <article class="product-card">
+                    <div class="product-photo">
+                        <img src="assets/pic/6.jfif" alt="Colorful illuminated gaming computer" loading="lazy">
+                    </div>
+                    <div class="product-bottom">
+                        <span class="product-tag">SIGNATURE EDITION</span>
+                        <h3>NEON CORE</h3>
+                        <p>Color, character, and pure energy.</p>
+                        <button class="icon-button" data-preset="neon" aria-label="Configure Neon Core" type="button">CONFIGURE <span aria-hidden="true">↗</span></button>
+                    </div>
+                </article>
+            </div>
+        </section>
+        <section class="feature-band section-wrap" id="specs" tabindex="-1"><div class="feature-image"><img src="assets/pic/15.jpg" alt="Gaming desktop and monitor setup" loading="lazy"><span>ENGINEERED FOR IMMERSION</span></div><div class="feature-copy"><div class="section-kicker">02 / UNDER THE HOOD</div><h2>EVERY DETAIL.<br><span>EVERY FRAME.</span></h2><p>A great setup is more than just the tower. Explore the components that shape your experience, from processing power to graphics and memory.</p><div class="feature-points"><div><span>01</span><div><strong>PROCESSING POWER</strong><small>Choose a CPU to match your workflow and games.</small></div></div><div><span>02</span><div><strong>VISUAL PERFORMANCE</strong><small>Find the graphics card that fits your ambitions.</small></div></div><div><span>03</span><div><strong>SMOOTH MULTITASKING</strong><small>Configure memory for your everyday demands.</small></div></div></div><a href="#builder" class="text-link">CUSTOMIZE YOUR COMPONENTS <span>↗</span></a></div></section>
+        <section class="section-wrap section-pad video-section" id="games" tabindex="-1"><div class="section-top"><div><div class="section-kicker">03 / THE EXPERIENCE</div><h2>MADE TO <span>PLAY.</span></h2><p>Enter the world of gaming. Your next adventure starts here.</p></div><span class="section-side">PRESS PLAY ↘</span></div><div class="video-shell"><div class="video-player"><video id="gameVideo" controls preload="metadata" playsinline webkit-playsinline poster="assets/pic/17.jpg" aria-label="Original gaming project video"><source src="assets/video/1.mp4" type="video/mp4">Your browser does not support video playback.</video><button class="video-play-button" id="videoPlayButton" type="button" aria-label="Play gaming video"><span aria-hidden="true">▶</span><strong>PLAY VIDEO</strong></button></div><p class="video-status" id="videoStatus" role="status" aria-live="polite" hidden></p><div class="video-caption"><span>THE GAMING EXPERIENCE</span><span>ORIGINAL PROJECT VIDEO ↗</span></div></div></section>
+        <section class="builder-section" id="builder" tabindex="-1"><div class="section-wrap"><div class="section-top"><div><div class="section-kicker">04 / YOUR MACHINE, YOUR RULES</div><h2>BUILD YOUR <span>BEAST.</span></h2><p>Mix and match your favorite components. Watch your build come together in real time.</p></div><span class="section-side">INTERACTIVE PC BUILDER ↘</span></div><div class="builder-grid"><div class="builder-controls"><div class="field"><label for="cpu"><span>01</span> PROCESSOR / CPU</label><select id="cpu"><option value="i5">Intel Core i5</option><option value="i7">Intel Core i7</option><option value="ryzen5">AMD Ryzen 5</option><option value="ryzen7">AMD Ryzen 7</option></select></div><div class="field"><label for="gpu"><span>02</span> GRAPHICS / GPU</label><select id="gpu"><option value="gtx1660">NVIDIA GTX 1660</option><option value="rtx2060">NVIDIA RTX 2060</option><option value="rx5700">AMD Radeon RX 5700</option><option value="rx580">AMD Radeon RX 580</option></select></div><div class="field"><label for="ram"><span>03</span> MEMORY / RAM</label><select id="ram"><option value="8gb">8GB DDR4</option><option value="16gb">16GB DDR4</option><option value="32gb">32GB DDR4</option></select></div><div class="builder-buttons"><button class="btn btn-primary" id="copyBuild">COPY MY BUILD <span>↗</span></button><button class="btn btn-outline" id="resetBuild">RESET</button></div><p class="builder-note" id="builderNotice" aria-live="polite">A concept configurator — component compatibility and pricing are not verified.</p></div><div class="builder-preview"><div class="preview-head"><span>LIVE BUILD PREVIEW</span><span class="online-dot">● CUSTOM</span></div><img id="buildPreviewImage" src="assets/pic/4.jfif" alt="Illustrative gaming PC tower for the selected configuration" loading="lazy"><div class="preview-image-note">PC appearance preview · illustrative only</div><div class="build-summary"><div><small>PROCESSOR</small><strong id="cpuSummary">Intel Core i5</strong></div><div><small>GRAPHICS</small><strong id="gpuSummary">NVIDIA GTX 1660</strong></div><div><small>MEMORY</small><strong id="ramSummary">8GB DDR4</strong></div></div></div></div></div></section>
+        <section class="contact-section section-wrap section-pad" id="contact" tabindex="-1"><div class="contact-copy"><div class="section-kicker">05 / SAY HELLO</div><h2>LET'S TALK<br><span>GAMING.</span></h2><p>Questions about the site or want to share your setup? Drop a message below.</p><div class="contact-detail">MADE WITH PASSION. BUILT FOR PLAY. <span>✳</span></div></div><form class="contact-form" id="contactForm"><div class="form-row"><label>YOUR NAME<input id="contactName" type="text" placeholder="Enter your name" required></label><label>EMAIL ADDRESS<input id="contactEmail" type="email" placeholder="you@example.com" required></label></div><label>SUBJECT<input id="contactSubject" type="text" placeholder="What is this about?" required></label><label>MESSAGE<textarea id="contactMessage" rows="5" placeholder="Tell us what's on your mind..." required></textarea></label><button class="btn btn-primary" type="submit">PREPARE MESSAGE <span>↗</span></button><p class="form-help" id="formNotice" aria-live="polite">Demo form: prepares an email in your email app; no server is connected.</p></form></section>
+    </main>
+    <footer><div class="section-wrap footer-inner"><a class="logo" href="#home"><span class="logo-symbol">N<span class="logo-dot">.</span></span><span>NEXUS<span class="logo-light">GAMING</span></span></a><span>REIMAGINED FROM THE ORIGINAL 2024 GAMING PC PROJECT.</span><a href="#home">BACK TO TOP ↑</a></div></footer>
+</body>
+</html>
