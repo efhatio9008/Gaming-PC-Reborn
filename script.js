@@ -2,26 +2,120 @@
 const menuToggle = document.getElementById('menuToggle');
 const mainNav = document.getElementById('mainNav');
 
-menuToggle.addEventListener('click', function() {
-    const isOpen = mainNav.classList.toggle('open');
+const navLinks = Array.from(mainNav.querySelectorAll('.nav-link'));
+const mobileNavigation = window.matchMedia('(max-width: 800px)');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const siteHeader = menuToggle.closest('.site-header');
+const destinations = navLinks.map(function(link) {
+    return document.getElementById(link.hash.slice(1));
+});
+
+function setMenuOpen(isOpen) {
+    mainNav.classList.toggle('open', isOpen);
     menuToggle.setAttribute('aria-expanded', String(isOpen));
     menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
     menuToggle.textContent = isOpen ? '×' : '☰';
+}
+
+menuToggle.addEventListener('click', function() {
+    setMenuOpen(!mainNav.classList.contains('open'));
 });
 
-document.querySelectorAll('.nav-link').forEach(function(link) {
-    link.addEventListener('click', function() {
-        mainNav.classList.remove('open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.textContent = '☰';
+navLinks.forEach(function(link, index) {
+    link.addEventListener('click', function(event) {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (!mainNav.classList.contains('open')) return;
+
+        setMenuOpen(false);
+        destinations[index].focus({ preventScroll: true });
     });
 });
+
+document.addEventListener('keydown', function(event) {
+    if (event.key !== 'Escape' || !mainNav.classList.contains('open')) return;
+    setMenuOpen(false);
+    menuToggle.focus();
+});
+
+document.addEventListener('click', function(event) {
+    if (mainNav.classList.contains('open') && !siteHeader.contains(event.target)) {
+        setMenuOpen(false);
+    }
+});
+
+document.addEventListener('focusin', function(event) {
+    if (mainNav.classList.contains('open') && !siteHeader.contains(event.target)) {
+        setMenuOpen(false);
+    }
+});
+
+mobileNavigation.addEventListener('change', function(event) {
+    const focusedLink = mainNav.contains(document.activeElement);
+    const focusedToggle = document.activeElement === menuToggle;
+    setMenuOpen(false);
+
+    if (event.matches && focusedLink) menuToggle.focus();
+    if (!event.matches && focusedToggle) (mainNav.querySelector('.active') || navLinks[0]).focus();
+});
+
+menuToggle.hidden = false;
+
+let activeNavIndex = -1;
+let navUpdatePending = false;
+
+function updateActiveNavigation() {
+    navUpdatePending = false;
+    const scrollRoot = document.scrollingElement;
+    const atBottom = scrollRoot.scrollHeight > scrollRoot.clientHeight &&
+        scrollRoot.scrollHeight - scrollRoot.scrollTop - scrollRoot.clientHeight <= 2;
+    const activationLine = siteHeader.getBoundingClientRect().bottom + 32;
+    let nextIndex = 0;
+
+    if (atBottom) {
+        nextIndex = destinations.length - 1;
+    } else {
+        destinations.forEach(function(section, index) {
+            if (section.getBoundingClientRect().top <= activationLine) nextIndex = index;
+        });
+    }
+
+    if (nextIndex === activeNavIndex) return;
+    navLinks.forEach(function(link, index) {
+        const isActive = index === nextIndex;
+        link.classList.toggle('active', isActive);
+        if (isActive) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+    });
+    activeNavIndex = nextIndex;
+}
+
+function queueNavigationUpdate() {
+    if (navUpdatePending) return;
+    navUpdatePending = true;
+    window.requestAnimationFrame(updateActiveNavigation);
+}
+
+window.addEventListener('scroll', queueNavigationUpdate, { passive: true });
+window.addEventListener('resize', queueNavigationUpdate);
+window.addEventListener('hashchange', queueNavigationUpdate);
+window.addEventListener('load', queueNavigationUpdate);
+queueNavigationUpdate();
 
 const cpu = document.getElementById('cpu');
 const gpu = document.getElementById('gpu');
 const ram = document.getElementById('ram');
 const builderNotice = document.getElementById('builderNotice');
 const builderPreviewImage = document.getElementById('buildPreviewImage');
+const builder = document.getElementById('builder');
+const builderSelects = [cpu, gpu, ram];
+const summaryFields = ['cpuSummary', 'gpuSummary', 'ramSummary'].map(function(id) {
+    return document.getElementById(id);
+});
+const presets = {
+    phantom: ['i7', 'rtx2060', '16gb'],
+    arctic: ['ryzen5', 'rx5700', '16gb'],
+    neon: ['ryzen7', 'rtx2060', '32gb']
+};
 
 // Twelve original gaming PC photos are reused across all 48 configurations.
 // This is a visual showcase, not an exact hardware-to-photo compatibility match.
@@ -34,65 +128,93 @@ const cpuOptions = ['i5', 'i7', 'ryzen5', 'ryzen7'];
 const gpuOptions = ['gtx1660', 'rtx2060', 'rx5700', 'rx580'];
 const ramOptions = ['8gb', '16gb', '32gb'];
 
-function updateBuildPhoto() {
+function getBuildLabels() {
+    return builderSelects.map(function(select) {
+        return select.selectedOptions[0].textContent;
+    });
+}
+
+function updateBuildPhoto(labels) {
     const cpuIndex = cpuOptions.indexOf(cpu.value);
     const gpuIndex = gpuOptions.indexOf(gpu.value);
     const ramIndex = ramOptions.indexOf(ram.value);
     const combinationIndex = (cpuIndex * gpuOptions.length + gpuIndex) * ramOptions.length + ramIndex;
-    const photo = buildPhotos[combinationIndex % buildPhotos.length];
-    builderPreviewImage.src = 'assets/pic/' + photo;
-    builderPreviewImage.alt = 'Gaming PC appearance preview for ' + cpu.selectedOptions[0].textContent + ', ' + gpu.selectedOptions[0].textContent + ' and ' + ram.selectedOptions[0].textContent + '. Illustrative photo only.';
-}
+    const photoPath = 'assets/pic/' + buildPhotos[combinationIndex % buildPhotos.length];
 
+    if (builderPreviewImage.getAttribute('src') !== photoPath) builderPreviewImage.src = photoPath;
+    builderPreviewImage.alt = 'Gaming PC appearance preview for ' + labels[0] + ', ' + labels[1] + ' and ' + labels[2] + '. Illustrative photo only.';
+}
 
 function updateSummary() {
-    document.getElementById('cpuSummary').textContent = cpu.selectedOptions[0].textContent;
-    document.getElementById('gpuSummary').textContent = gpu.selectedOptions[0].textContent;
-    document.getElementById('ramSummary').textContent = ram.selectedOptions[0].textContent;
-    updateBuildPhoto();
+    const labels = getBuildLabels();
+    summaryFields.forEach(function(field, index) {
+        field.textContent = labels[index];
+    });
+    updateBuildPhoto(labels);
 }
 
-[cpu, gpu, ram].forEach(function(select) {
+builderSelects.forEach(function(select) {
     select.addEventListener('change', updateSummary);
 });
 
 document.querySelectorAll('[data-preset]').forEach(function(button) {
     button.addEventListener('click', function() {
-        const preset = button.dataset.preset;
-        const choices = {
-            phantom: ['i7', 'rtx2060', '16gb'],
-            arctic: ['ryzen5', 'rx5700', '16gb'],
-            neon: ['ryzen7', 'rtx2060', '32gb']
-        };
-        [cpu.value, gpu.value, ram.value] = choices[preset];
+        const choices = presets[button.dataset.preset];
+        if (!Array.isArray(choices)) return;
+
+        builderSelects.forEach(function(select, index) {
+            select.value = choices[index];
+        });
         updateSummary();
         builderNotice.textContent = 'Example configuration loaded. Verify component compatibility before purchasing.';
-        document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
+        builder.focus({ preventScroll: true });
+        builder.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth' });
     });
 });
 
 document.getElementById('resetBuild').addEventListener('click', function() {
-    cpu.selectedIndex = 0;
-    gpu.selectedIndex = 0;
-    ram.selectedIndex = 0;
+    builderSelects.forEach(function(select) {
+        select.selectedIndex = 0;
+    });
     updateSummary();
     builderNotice.textContent = 'Build reset to default options.';
 });
 
+function copyWithFallback(summary) {
+    const previousFocus = document.activeElement;
+    const text = document.createElement('textarea');
+    text.value = summary;
+    text.readOnly = true;
+    text.style.position = 'fixed';
+    text.style.inset = '0 auto auto 0';
+    text.style.opacity = '0';
+    document.body.appendChild(text);
+
+    try {
+        text.focus({ preventScroll: true });
+        text.select();
+        return document.execCommand('copy');
+    } catch {
+        return false;
+    } finally {
+        text.remove();
+        previousFocus.focus({ preventScroll: true });
+    }
+}
+
 document.getElementById('copyBuild').addEventListener('click', async function() {
-    const summary = 'NEXUS GAMING - MY PC BUILD\nCPU: ' + cpu.selectedOptions[0].textContent + '\nGPU: ' + gpu.selectedOptions[0].textContent + '\nRAM: ' + ram.selectedOptions[0].textContent + '\nNote: Concept configuration; compatibility and pricing not verified.';
+    const [cpuLabel, gpuLabel, ramLabel] = getBuildLabels();
+    const summary = 'NEXUS GAMING - MY PC BUILD\nCPU: ' + cpuLabel + '\nGPU: ' + gpuLabel + '\nRAM: ' + ramLabel + '\nNote: Concept configuration; compatibility and pricing not verified.';
+    let copied;
+
     try {
         await navigator.clipboard.writeText(summary);
-        builderNotice.textContent = 'Your build has been copied!';
-    } catch (error) {
-        const text = document.createElement('textarea');
-        text.value = summary;
-        document.body.appendChild(text);
-        text.select();
-        const copied = document.execCommand('copy');
-        text.remove();
-        builderNotice.textContent = copied ? 'Your build has been copied!' : 'Clipboard unavailable. Please use a modern browser or HTTPS.';
+        copied = true;
+    } catch {
+        copied = copyWithFallback(summary);
     }
+
+    builderNotice.textContent = copied ? 'Your build has been copied!' : 'Clipboard unavailable. Please use a modern browser or HTTPS.';
 });
 
 updateSummary();
@@ -110,49 +232,53 @@ document.getElementById('contactForm').addEventListener('submit', function(event
     window.location.href = mailto;
 });
 
-const sections = document.querySelectorAll('main section[id]');
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-            document.querySelectorAll('.nav-link').forEach(function(link) {
-                link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
-            });
-        }
-    });
-}, { rootMargin: '-25% 0px -60% 0px' });
-sections.forEach(function(section) { observer.observe(section); });
-updateSummary();
-
-
-// Video controls: support both mouse and touch, with visible load-error feedback.
+// Keep the native controls and provide feedback when the video source is unavailable.
 const gameVideo = document.getElementById('gameVideo');
 const videoPlayButton = document.getElementById('videoPlayButton');
 const videoStatus = document.getElementById('videoStatus');
-if (gameVideo && videoPlayButton && videoStatus) {
-    function showVideoMessage(message) {
-        videoStatus.textContent = message;
-        videoStatus.hidden = !message;
+const videoSource = gameVideo.querySelector('source');
+const videoErrorMessage = 'Video failed to load. Confirm that assets/video/1.mp4 exists and is supported by your browser.';
+
+function showVideoMessage(message) {
+    videoStatus.textContent = message;
+    videoStatus.hidden = !message;
+}
+
+function reportVideoError() {
+    videoPlayButton.hidden = false;
+    showVideoMessage(videoErrorMessage);
+}
+
+videoPlayButton.addEventListener('click', async function() {
+    if (gameVideo.error || gameVideo.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+        reportVideoError();
+        return;
     }
-    videoPlayButton.addEventListener('click', async function() {
-        showVideoMessage('');
-        try {
-            await gameVideo.play();
-        } catch (error) {
-            showVideoMessage('Video could not start. Check that assets/video/1.mp4 was uploaded to GitHub and try again.');
-        }
-    });
-    gameVideo.addEventListener('play', function() {
-        videoPlayButton.hidden = true;
-        showVideoMessage('');
-    });
-    gameVideo.addEventListener('pause', function() {
-        if (!gameVideo.ended) videoPlayButton.hidden = false;
-    });
-    gameVideo.addEventListener('ended', function() {
-        videoPlayButton.hidden = false;
-    });
-    gameVideo.addEventListener('error', function() {
-        videoPlayButton.hidden = false;
-        showVideoMessage('Video failed to load. Confirm that assets/video/1.mp4 exists in your GitHub repository (including the exact lowercase filename).');
-    });
+
+    showVideoMessage('');
+    try {
+        await gameVideo.play();
+    } catch (error) {
+        if (error.name === 'AbortError') return;
+        if (error.name === 'NotSupportedError') reportVideoError();
+        else showVideoMessage('Video could not start. Try the video controls again.');
+    }
+});
+
+gameVideo.addEventListener('play', function() {
+    if (document.activeElement === videoPlayButton) gameVideo.focus({ preventScroll: true });
+    videoPlayButton.hidden = true;
+    showVideoMessage('');
+});
+gameVideo.addEventListener('pause', function() {
+    videoPlayButton.hidden = false;
+});
+gameVideo.addEventListener('ended', function() {
+    videoPlayButton.hidden = false;
+});
+gameVideo.addEventListener('error', reportVideoError);
+videoSource.addEventListener('error', reportVideoError);
+
+if (gameVideo.error || gameVideo.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+    reportVideoError();
 }
